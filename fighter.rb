@@ -26,6 +26,7 @@ class Fighter
   def defend(damage, enemy)
     @health -= damage
     if dead
+      changed
       @health = 0 # avoid negative health
       notify_observers(self, 'dead')
     end

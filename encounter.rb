@@ -3,16 +3,21 @@ require_relative 'fighter'
 class Encounter
   def initialize(args)
     @fighters = args[:fighters]
-    @fighters.each { |fighter|
-      fighter.add_observer(self)}
   end
 
   def start
+    @fighters.each { |fighter|
+      fighter.add_observer(self)}
+
+    # TODO: clean up this terrible looping
     i = 0
     puts "Press enter to start"
     while !winner do
       fighter = @fighters[i]
-      if !fighter.dead
+      if fighter.dead
+        @fighters -= [fighter]
+        i -= 1
+      else
         gets
         fighter.fight(self)
         status
@@ -22,7 +27,6 @@ class Encounter
         i = 0
       end
     end
-    puts "\n#{winner.name} wins!!!"
   end
 
   def enemies(fighter)
@@ -38,13 +42,19 @@ class Encounter
   end
 
   def status
-    results = []
-    @fighters.each { |fighter|
-      results.push("#{fighter.name} #{fighter.health}")}
-    puts results.join(" | ")
+    if winner
+      puts "\n#{winner.name} wins!!!"
+    else
+      results = []
+      @fighters.each { |fighter|
+        if !fighter.dead
+          results.push("#{fighter.name} #{fighter.health}")
+        end}
+      puts results.join(" | ")
+    end
   end
 
   def update(fighter, event)
-    puts "#{fighter.name} has died!"
+    puts "#{fighter.name} has died."
   end
 end
