@@ -3,10 +3,15 @@ require 'observer'
 class Fighter
   include Observable
 
-  attr_reader :name, :health
+  Resource = Struct.new(:max, :current)
+
+  attr_reader :name, :health, :mana
   def initialize(args)
     @name = args[:name]
-    @health = args[:health] || 10
+    health = args[:health] || 10
+    mana = args[:mana] || 0
+    @health = Resource.new(health,health)
+    @mana = Resource.new(mana,mana)
     @attack_power = args[:attack_power] || 1
   end
 
@@ -14,8 +19,6 @@ class Fighter
     enemies = encounter.enemies(self)
     enemy = enemies[rand(enemies.length)]
     attack(enemy)
-    # enemies.each { |enemy|
-      # }
   end
 
   def attack(enemy)
@@ -24,15 +27,15 @@ class Fighter
   end
 
   def defend(damage, enemy)
-    @health -= damage
+    @health.current -= damage
     if dead
       changed
-      @health = 0 # avoid negative health
+      @health.current = 0 # avoid negative health
       notify_observers(self, 'dead')
     end
   end
 
   def dead
-    @health <= 0
+    @health.current <= 0
   end
 end

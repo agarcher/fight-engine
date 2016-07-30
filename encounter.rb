@@ -48,7 +48,7 @@ class Encounter
       results = []
       @fighters.each { |fighter|
         if !fighter.dead
-          results.push("#{fighter.name} #{fighter.health}")
+          results.push("#{fighter.name} #{fighter.health.current}")
         end}
       puts results.join(" | ")
     end
