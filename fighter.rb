@@ -13,6 +13,7 @@ class Fighter
     @health = Resource.new(health,health)
     @mana = Resource.new(mana,mana)
     @attack_power = args[:attack_power] || 1
+    puts "#{name} - #{self.class.name} - health #{@health.max} - attack #{@attack_power}"
   end
 
   def fight(encounter)
@@ -22,8 +23,8 @@ class Fighter
   end
 
   def attack(enemy)
-    puts "#{name} hits #{enemy.name} for #{@attack_power} damage!"
-    enemy.defend(@attack_power, self)
+    puts "#{name} hits #{enemy.name} for #{attack_power} damage!"
+    enemy.defend(attack_power, self)
   end
 
   def defend(damage, enemy)
@@ -33,6 +34,10 @@ class Fighter
       @health.current = 0 # avoid negative health
       notify_observers(self, 'dead')
     end
+  end
+
+  def attack_power
+    @attack_power
   end
 
   def dead
