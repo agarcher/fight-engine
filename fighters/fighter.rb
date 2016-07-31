@@ -1,19 +1,24 @@
 require 'observer'
+require_relative '../resource'
 
 class Fighter
   include Observable
 
-  Resource = Struct.new(:max, :current)
-
   attr_reader :name, :health, :mana, :attack_power
   def initialize(args)
     @name = args[:name]
-    health = args[:health] || 10
-    mana = args[:mana] || 0
-    @health = Resource.new(health,health)
-    @mana = Resource.new(mana,mana)
+    @health = Resource.new(args[:health] || default_health)
+    @mana = Resource.new(args[:mana] || default_mana)
     @attack_power = args[:attack_power] || 1
-    puts "#{name} - #{self.class.name} - health #{@health.max} - attack #{@attack_power}"
+    puts "#{name} - #{self.class.name} - health #{@health} - attack #{@attack_power}"
+  end
+
+  def default_health
+    10
+  end
+
+  def default_mana
+    0
   end
 
   def initiative
@@ -32,15 +37,14 @@ class Fighter
   end
 
   def defend(damage, enemy)
-    @health.current -= damage
+    @health -= damage
     if dead
       changed
-      @health.current = 0 # avoid negative health
       notify_observers(self, 'dead')
     end
   end
 
   def dead
-    @health.current <= 0
+    @health == 0
   end
 end
