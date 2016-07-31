@@ -1,11 +1,10 @@
-require_relative 'fighter'
-
 class Encounter
   def initialize(args)
     @fighters = args[:fighters]
   end
 
   def start
+    initiative
     @fighters.each { |fighter|
       fighter.add_observer(self)}
 
@@ -27,6 +26,12 @@ class Encounter
         i = 0
       end
     end
+  end
+
+  def initiative
+    @fighters.sort! { |a,b|
+      result = a.initiative <=> b.initiative
+      result != 0 ? result : (rand(2) == 0 ? -1 : 1)}
   end
 
   def enemies(fighter)

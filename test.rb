@@ -1,6 +1,6 @@
 require_relative 'encounter'
-require_relative 'brawler'
-require_relative 'assassin'
+require_relative 'fighters/brawler'
+require_relative 'fighters/assassin'
 
 fighters = [
   Assassin.new(

@@ -5,7 +5,7 @@ class Fighter
 
   Resource = Struct.new(:max, :current)
 
-  attr_reader :name, :health, :mana
+  attr_reader :name, :health, :mana, :attack_power
   def initialize(args)
     @name = args[:name]
     health = args[:health] || 10
@@ -14,6 +14,10 @@ class Fighter
     @mana = Resource.new(mana,mana)
     @attack_power = args[:attack_power] || 1
     puts "#{name} - #{self.class.name} - health #{@health.max} - attack #{@attack_power}"
+  end
+
+  def initiative
+    @initiative ||= rand(10)
   end
 
   def fight(encounter)
@@ -34,10 +38,6 @@ class Fighter
       @health.current = 0 # avoid negative health
       notify_observers(self, 'dead')
     end
-  end
-
-  def attack_power
-    @attack_power
   end
 
   def dead
