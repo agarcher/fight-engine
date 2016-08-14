@@ -28,15 +28,11 @@ class Fighter
   def fight(encounter)
     enemies = encounter.enemies(self)
     enemy = enemies[rand(enemies.length)]
-    attack(enemy)
-  end
-
-  def attack(enemy)
     puts "#{name} hits #{enemy.name} for #{attack_power} damage!"
     enemy.defend(attack_power, self)
   end
 
-  def defend(damage, enemy)
+  def defend(damage, attacker)
     @health -= damage
     if dead
       changed
